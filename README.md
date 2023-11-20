@@ -1,5 +1,5 @@
 
-Hangman - Word Hanging Game
+#Hangman - Word Hanging Game
 
 Welcome to Hangman, a classic game that challenges your word-guessing skills! In this game, you'll face the challenge of uncovering a hidden word, letter by letter, before a man is "hanged." Here's a brief guide to get started:
 
