@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import Figure from './components/Figure';
 import WrongLetters from './components/WrongLetters';
@@ -6,66 +6,95 @@ import Word from './components/Word';
 import Popup from './components/Popup';
 import Notification from './components/Notification';
 import { showNotification as show, checkWin } from './helpers/helpers';
+import api from 'axios';
 
-import './App.css';
-
-const words = ['application', 'programming', 'interface', 'wizard'];
-let selectedWord = words[Math.floor(Math.random() * words.length)];
+import './App.css';;
 
 function App() {
-    const [playable, setPlayable] = useState(true);
-    const [correctLetters, setCorrectLetters] = useState([]);
-    const [wrongLetters, setWrongLetters] = useState([]);
-    const [showNotification, setShowNotification] = useState(false);
+  const [selectedWord, setSelectedWord] = useState('');
+  const [playable, setPlayable] = useState(true);
+  const [correctLetters, setCorrectLetters] = useState([]);
+  const [wrongLetters, setWrongLetters] = useState([]);
+  const [showNotification, setShowNotification] = useState(false);
 
-    useEffect(() => {
-        const handleKeydown = event => {
-            const { key, keyCode } = event;
-            if (playable && keyCode >= 65 && keyCode <= 90) {
-                const letter = key.toLowerCase();
-                if (selectedWord.includes(letter)) {
-                    if (!correctLetters.includes(letter)) {
-                        setCorrectLetters(currentLetters => [...currentLetters, letter]);
-                    } else {
-                        show(setShowNotification);
-                    }
-                } else {
-                    if (!wrongLetters.includes(letter)) {
-                        setWrongLetters(currentLetters => [...currentLetters, letter]);
-                    } else {
-                        show(setShowNotification);
-                    }
-                }
-            }
-        }
-        window.addEventListener('keydown', handleKeydown);
+  const getWord = useCallback(() => {
+    api.get('https://localhost:7153/Hangman/word').then((response) => {
+      setSelectedWord(response.data);
+    });
+  }, []);
 
-        return () => window.removeEventListener('keydown', handleKeydown);
-    }, [correctLetters, wrongLetters, playable]);
+  useEffect(() => {
+    getWord();
+  }, [getWord]);
 
-    function playAgain() {
-        setPlayable(true);
+  useEffect(() => {
+    const handleKeydown = (event) => {
+      const { key, keyCode } = event;
+      let responseData = {
+        message: '',
+        correctKeys: [],
+        wrongKeys: [],
+      };
+      api
+        .post('https://localhost:7153/Hangman/key', {
+          Key: key,
+          KeyCode: keyCode,
+          Word: selectedWord,
+          CorrectKeys: correctLetters ?? [],
+          WrongKeys: wrongLetters ?? [],
+        })
+        .then((response) => {
+          responseData = response.data;
 
-        // Empty Arrays
-        setCorrectLetters([]);
-        setWrongLetters([]);
+          if (responseData.message === 'Correct key') {
+            setCorrectLetters(responseData.correctKeys);
+          }
 
-        const random = Math.floor(Math.random() * words.length);
-        selectedWord = words[random];
-    }
+          if (responseData.message === 'Wrong key') {
+            setWrongLetters(responseData.wrongKeys);
+          }
 
-    return (
-        <>
-            <Header />
-            <div className="game-container">
-                <Figure wrongLetters={wrongLetters} />
-                <WrongLetters wrongLetters={wrongLetters} />
-                <Word selectedWord={selectedWord} correctLetters={correctLetters} />
-            </div>
-            <Popup correctLetters={correctLetters} wrongLetters={wrongLetters} selectedWord={selectedWord} setPlayable={setPlayable} playAgain={playAgain} />
-            <Notification showNotification={showNotification} />
-        </>
-    );
+          if (responseData.message === 'Key already pressed') {
+            show(setShowNotification);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    window.addEventListener('keydown', handleKeydown);
+
+    return () => window.removeEventListener('keydown', handleKeydown);
+  }, [correctLetters, wrongLetters, playable, selectedWord]);
+
+  const playAgain = useCallback(() => {
+    setPlayable(true);
+
+    setCorrectLetters([]);
+    setWrongLetters([]);
+
+    getWord();
+    
+  }, [getWord]);
+
+  return (
+    <>
+      <Header />
+      <div className="game-container">
+        <Figure wrongLetters={wrongLetters} />
+        <WrongLetters wrongLetters={wrongLetters} />
+        <Word selectedWord={selectedWord} correctLetters={correctLetters} />
+      </div>
+      <Popup
+        correctLetters={correctLetters}
+        wrongLetters={wrongLetters}
+        selectedWord={selectedWord}
+        setPlayable={setPlayable}
+        playAgain={playAgain}
+      />
+      <Notification showNotification={showNotification} />
+    </>
+  );
 }
 
 export default App;

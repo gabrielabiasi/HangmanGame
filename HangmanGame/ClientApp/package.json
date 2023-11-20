@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@csstools/normalize.css": "github:csstools/normalize.css",
+    "axios": "^1.6.2",
     "bootstrap": "^5.2.3",
     "http-proxy-middleware": "^2.0.6",
     "jquery": "^3.6.4",
@@ -15,6 +17,7 @@
     "react-scripts": "^5.0.1",
     "reactstrap": "^9.1.9",
     "rimraf": "^5.0.0",
+    "sanitize.css": "^13.0.0",
     "web-vitals": "^3.3.1",
     "workbox-background-sync": "^6.5.4",
     "workbox-broadcast-update": "^6.5.4",
@@ -52,7 +55,8 @@
     "build": "react-scripts build",
     "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint ./src/"
+    "lint": "eslint ./src/",
+    "dev": "react-scripts start"
   },
   "eslintConfig": {
     "extends": [

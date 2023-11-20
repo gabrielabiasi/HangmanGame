@@ -1,8 +1,23 @@
+using Game.Domain.Handlers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<GameHandler>();
+builder.Services.AddScoped<WordsHandlers>();
+builder.Services.AddScoped<ValidateKeyHandler>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        name: "AllowAnyOrigin",
+        builder =>
+        {
+            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        }
+    );
+});
 
 var app = builder.Build();
 
@@ -16,12 +31,11 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors("AllowAnyOrigin");
 
+app.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
-
-app.MapFallbackToFile("index.html"); ;
+app.MapFallbackToFile("index.html");
+;
 
 app.Run();
