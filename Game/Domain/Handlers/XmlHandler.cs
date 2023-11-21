@@ -8,9 +8,9 @@ using System.Xml;
 
 namespace Game.Domain.Handlers
 {
-    public class XmlHandler<T>
+    public class XmlHandler
     {
-        public T ReadXmlFile(string fileName)
+        public T ReadXmlFile<T>(string fileName)
         {
             try
             {
@@ -32,11 +32,6 @@ namespace Game.Domain.Handlers
                     result = (T)serializer.Deserialize(reader);
                 }
 
-                if (result != null)
-                {
-                    ProcessAttributes(xmlDoc.DocumentElement, result);
-                }
-
                 return result;
             }
             catch (Exception ex)
@@ -46,24 +41,24 @@ namespace Game.Domain.Handlers
             }
         }
 
-        private string ProcessAttributes(XmlNode node, object obj)
-        {
-            string ChosenWord = "";
+        //private string ProcessAttributes(XmlNode node, object obj)
+        //{
+        //    string ChosenWord = "";
 
-            if (node.Attributes != null)
-            {
-                foreach (XmlAttribute attribute in node.Attributes)
-                {
-                    ChosenWord += attribute.Value + " ";
-                }               
-            }
+        //    if (node.Attributes != null)
+        //    {
+        //        foreach (XmlAttribute attribute in node.Attributes)
+        //        {
+        //            ChosenWord += attribute.Value + " ";
+        //        }               
+        //    }
 
-            foreach (XmlNode childNode in node.ChildNodes)
-            {
-                ProcessAttributes(childNode, obj);
-            }
+        //    foreach (XmlNode childNode in node.ChildNodes)
+        //    {
+        //        ProcessAttributes(childNode, obj);
+        //    }
 
-            return ChosenWord.Trim();
-        }
+        //    return ChosenWord.Trim();
+        //}
     }
 }
