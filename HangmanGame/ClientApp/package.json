@@ -30,7 +30,8 @@
     "workbox-range-requests": "^6.5.4",
     "workbox-routing": "^6.5.4",
     "workbox-strategies": "^6.5.4",
-    "workbox-streams": "^6.5.4"
+    "workbox-streams": "^6.5.4",
+    "http-server": "^14.1.1"
   },
   "devDependencies": {
     "ajv": "^8.12.0",
@@ -56,7 +57,9 @@
     "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint ./src/",
-    "dev": "react-scripts start"
+    "dev": "react-scripts start",
+    "run-backend": "dotnet restore ../HangmanGame.csproj && dotnet publish ../HangmanGame.csproj -c Release --no-restore && start dotnet ../bin/Release/net6.0/HangmanGame.dll",
+    "prod-server": "http-server build -p 3000"
   },
   "eslintConfig": {
     "extends": [
