@@ -15,4 +15,13 @@ You can only press letters from the alphabet.<br />
 Avoid repeated letters to save your chances.<br />
 Keep an eye on the hangman drawing it's your only clue about the game's progress.<br /><br />
 
+## Project Execute
+
+1.Clonar o Projeto: Clone o repositório do projeto utilizando o comando: git clone [URL_do_repositório].<br />
+2.Instalar as Dependências: No diretório do projeto, execute o comando: npm install.<br />
+3. Iniciar o Projeto: Inicie o projeto utilizando: npm run start.<br />
+4. Restaurar Pacotes do .NET: Restaure os pacotes do .NET executando o comando: dotnet restore.<br />
+5. Executar o Projeto .NET: Execute o projeto .NET com o comando: dotnet run --project [caminho_para_o_arquivo_csproj].<br /><br />
+
+
 :tada: :tada: Have fun challenging your mind with Hangman! Good luck, and may the words be in your favor! :tada: :tada:
