@@ -4,9 +4,10 @@ WORKDIR /reactApp
 
 #Copiar os arquivos de origem
 COPY package.json .
-COPY package-lock.json .
+#COPY package-lock.json .
 
 # Instalar as dependencias
+RUN npm set strict-ssl false
 RUN npm install
 
 #Copiar tudo e fazer a build
